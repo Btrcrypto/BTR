@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -34,7 +34,14 @@ bool confirm(const std::string &msg, const bool defaultReturn);
 
 bool startsWith(const std::string &str, const std::string &substring);
 
+std::string formatAmountBasic(const uint64_t amount);
+std::string formatAmount(const uint64_t amount);
+std::string formatDollars(const uint64_t amount);
+std::string formatCents(const uint64_t amount);
+
 std::string unixTimeToDate(const uint64_t timestamp);
+
+uint64_t getDivisor();
 
 uint64_t getScanHeight();
 

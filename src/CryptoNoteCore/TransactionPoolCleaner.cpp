@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #include "TransactionPoolCleaner.h"
@@ -17,7 +17,7 @@ namespace CryptoNote {
 TransactionPoolCleanWrapper::TransactionPoolCleanWrapper(
   std::unique_ptr<ITransactionPool>&& transactionPool,
   std::unique_ptr<ITimeProvider>&& timeProvider,
-  std::shared_ptr<Logging::ILogger> logger,
+  Logging::ILogger& logger,
   uint64_t timeout)
   :
   transactionPool(std::move(transactionPool)),

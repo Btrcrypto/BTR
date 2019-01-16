@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -35,8 +35,7 @@ public:
 
 class NodeRpcProxy : public CryptoNote::INode {
 public:
-  NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, std::shared_ptr<Logging::ILogger> logger);
-  NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort);
+  NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, Logging::ILogger& logger);
   virtual ~NodeRpcProxy();
 
   virtual bool addObserver(CryptoNote::INodeObserver* observer) override;

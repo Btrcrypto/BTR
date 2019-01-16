@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 ////////////////////////////////////////
@@ -7,7 +7,7 @@
 ////////////////////////////////////////
 
 #include <zedwallet/AddressBook.h>
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet/ColouredMsg.h>
 #include <zedwallet/CommandImplementations.h>
 #include <zedwallet/Fusion.h>
 #include <zedwallet/Open.h>

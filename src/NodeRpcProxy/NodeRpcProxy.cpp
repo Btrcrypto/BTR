@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 
@@ -22,11 +22,9 @@
 #include <CryptoNoteCore/TransactionApi.h>
 
 #include "Common/StringTools.h"
+#include "Common/FormatTools.h"
 #include "CryptoNoteCore/CryptoNoteBasicImpl.h"
 #include "CryptoNoteCore/CryptoNoteTools.h"
-
-#include <Logging/DummyLogger.h>
-
 #include "Rpc/CoreRpcServerCommandsDefinitions.h"
 #include "Rpc/HttpClient.h"
 #include "Rpc/JsonRpc.h"
@@ -55,22 +53,8 @@ std::error_code interpretResponseStatus(const std::string& status) {
 
 }
 
-NodeRpcProxy::NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, std::shared_ptr<Logging::ILogger> logger) :
+NodeRpcProxy::NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort, Logging::ILogger& logger) :
   m_logger(logger, "NodeRpcProxy"),
-  m_rpcTimeout(10000),
-  m_pullInterval(5000),
-  m_nodeHost(nodeHost),
-  m_nodePort(nodePort),
-  m_connected(true),
-  m_peerCount(0),
-  m_networkHeight(0),
-  m_nodeHeight(0)
-{
-  resetInternalState();
-}
-
-NodeRpcProxy::NodeRpcProxy(const std::string& nodeHost, unsigned short nodePort) :
-  m_logger(std::make_shared<Logging::DummyLogger>(), "NodeRpcProxy"),
   m_rpcTimeout(10000),
   m_pullInterval(5000),
   m_nodeHost(nodeHost),

@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -12,23 +12,23 @@
 
 namespace CryptoNote {
 
-struct MiningConfig
-{
-    MiningConfig();
+struct MiningConfig {
+  MiningConfig();
 
-    void parse(int argc, char** argv);
+  void parse(int argc, char** argv);
 
-    std::string miningAddress;
-    std::string daemonAddress;
-    std::string daemonHost;
-    int daemonPort;
-    size_t threadCount;
-    size_t scanPeriod;
-    size_t blocksLimit;
-    uint64_t firstBlockTimestamp;
-    int64_t blockTimestampInterval;
-    bool help;
-    bool version;
+  std::string miningAddress;
+  std::string daemonAddress;
+  std::string daemonHost;
+  int daemonPort;
+  size_t threadCount;
+  size_t scanPeriod;
+  uint8_t logLevel;
+  size_t blocksLimit;
+  uint64_t firstBlockTimestamp;
+  int64_t blockTimestampInterval;
+  bool help;
+  bool version;
 };
 
 } //namespace CryptoNote

@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 /////////////////////////////////
@@ -8,11 +8,7 @@
 
 #include <config/WalletConfig.h>
 
-#include <iostream>
-
-#include <Utilities/FormatTools.h>
-
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet++/ColouredMsg.h>
 #include <zedwallet++/Fusion.h>
 #include <zedwallet++/GetInput.h>
 #include <zedwallet++/Utilities.h>
@@ -41,9 +37,9 @@ void transfer(
         std::stringstream stream;
 
         stream << "The minimum send allowed is "
-               << Utilities::formatAmount(WalletConfig::minimumSend)
+               << ZedUtilities::formatAmount(WalletConfig::minimumSend)
                << ", but you have "
-               << Utilities::formatAmount(unlockedBalance) << "!\n";
+               << ZedUtilities::formatAmount(unlockedBalance) << "!\n";
 
         std::cout << WarningMsg(stream.str());
         
@@ -131,13 +127,13 @@ void sendTransaction(
         std::cout << WarningMsg("\nYou don't have enough funds to cover "
                                 "this transaction!\n\n")
                   << "Funds needed: "
-                  << InformationMsg(Utilities::formatAmount(amount + fee + nodeFee))
+                  << InformationMsg(ZedUtilities::formatAmount(amount + fee + nodeFee))
                   << " (Includes a network fee of "
-                  << InformationMsg(Utilities::formatAmount(fee))
+                  << InformationMsg(ZedUtilities::formatAmount(fee))
                   << " and a node fee of "
-                  << InformationMsg(Utilities::formatAmount(nodeFee))
+                  << InformationMsg(ZedUtilities::formatAmount(nodeFee))
                   << ")\nFunds available: "
-                  << SuccessMsg(Utilities::formatAmount(unlockedBalance)) << "\n\n";
+                  << SuccessMsg(ZedUtilities::formatAmount(unlockedBalance)) << "\n\n";
 
         return cancel();
     }
@@ -147,7 +143,7 @@ void sendTransaction(
         return cancel();
     }
 
-    Error error;
+    WalletError error;
 
     Crypto::Hash hash;
 
@@ -294,7 +290,7 @@ void splitTX(
         std::stringstream stream;
 
         stream << "Transaction number " << txNumber << " has been sent!\nHash: "
-               << hash << "\nAmount: " << Utilities::formatAmount(splitAmount)
+               << hash << "\nAmount: " << ZedUtilities::formatAmount(splitAmount)
                << "\n\n";
 
         std::cout << SuccessMsg(stream.str()) << std::endl;
@@ -330,11 +326,11 @@ bool confirmTransaction(
     std::cout << InformationMsg("\nConfirm Transaction?\n");
 
     std::cout << "You are sending "
-              << SuccessMsg(Utilities::formatAmount(amount))
+              << SuccessMsg(ZedUtilities::formatAmount(amount))
               << ", with a network fee of " 
-              << SuccessMsg(Utilities::formatAmount(WalletConfig::defaultFee))
+              << SuccessMsg(ZedUtilities::formatAmount(WalletConfig::defaultFee))
               << ",\nand a node fee of "
-              << SuccessMsg(Utilities::formatAmount(nodeFee));
+              << SuccessMsg(ZedUtilities::formatAmount(nodeFee));
 
     if (paymentID != "")
     {

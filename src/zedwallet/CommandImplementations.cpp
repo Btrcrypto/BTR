@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 /////////////////////////////////////////////
@@ -8,9 +8,8 @@
 
 #include <atomic>
 
+#include <Common/FormatTools.h>
 #include <Common/StringTools.h>
-
-#include <config/WalletConfig.h>
 
 #include <CryptoNoteCore/Account.h>
 #include <CryptoNoteCore/TransactionExtra.h>
@@ -21,10 +20,8 @@
 
 #include <Mnemonics/Mnemonics.h>
 
-#include <Utilities/FormatTools.h>
-
 #include <zedwallet/AddressBook.h>
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet/ColouredMsg.h>
 #include <zedwallet/Commands.h>
 #include <zedwallet/Fusion.h>
 #include <zedwallet/Menu.h>
@@ -33,6 +30,7 @@
 #include <zedwallet/Tools.h>
 #include <zedwallet/Transfer.h>
 #include <zedwallet/Types.h>
+#include <config/WalletConfig.h>
 
 void changePassword(std::shared_ptr<WalletInfo> walletInfo)
 {
@@ -116,7 +114,7 @@ void balance(CryptoNote::INode &node, CryptoNote::WalletGreen &wallet,
 
     /* We can make a better approximation of the view wallet balance if we
        ignore fusion transactions.
-       See https://github.com/turtlecoin/turtlecoin/issues/531 */
+       See https://github.com/btr/btr/issues/531 */
     if (viewWallet)
     {
         /* Not sure how to verify if a transaction is unlocked or not via
@@ -218,10 +216,10 @@ void printSyncStatus(uint32_t localHeight, uint32_t remoteHeight,
                      uint32_t walletHeight)
 {
     std::string networkSyncPercentage
-        = Utilities::get_sync_percentage(localHeight, remoteHeight) + "%";
+        = Common::get_sync_percentage(localHeight, remoteHeight) + "%";
 
     std::string walletSyncPercentage
-        = Utilities::get_sync_percentage(walletHeight, remoteHeight) + "%";
+        = Common::get_sync_percentage(walletHeight, remoteHeight) + "%";
 
     std::cout << "Network sync status: ";
 
@@ -297,7 +295,7 @@ void printHashrate(uint64_t difficulty)
     );
 
     std::cout << "Network hashrate: "
-              << SuccessMsg(Utilities::get_mining_speed(hashrate))
+              << SuccessMsg(Common::get_mining_speed(hashrate))
               << " (Based on the last local block)" << std::endl;
 }
 

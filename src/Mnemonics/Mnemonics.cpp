@@ -1,5 +1,5 @@
 // Copyright 2014-2018 The Monero Developers
-// Copyright 2018 The TurtleCoin Developers
+// Copyright 2018 The btr Developers
 //
 // Please see the included LICENSE file for more information.
 
@@ -13,7 +13,7 @@
 
 namespace Mnemonics
 {
-    std::tuple<Error, Crypto::SecretKey> MnemonicToPrivateKey(const std::string words)
+    std::tuple<WalletError, Crypto::SecretKey> MnemonicToPrivateKey(const std::string words)
     {
         std::vector<std::string> wordsList;
 
@@ -30,7 +30,7 @@ namespace Mnemonics
 
     /* Note - if the returned string is not empty, it is an error message, and
        the returned secret key is not initialized. */
-    std::tuple<Error, Crypto::SecretKey> MnemonicToPrivateKey(const std::vector<std::string> words)
+    std::tuple<WalletError, Crypto::SecretKey> MnemonicToPrivateKey(const std::vector<std::string> words)
     {
         const size_t len = words.size();
 
@@ -41,7 +41,7 @@ namespace Mnemonics
                correct, based on if we have 1 or more words */
             const std::string wordPlural = len == 1 ? "word" : "words";
 
-            Error error(
+            WalletError error(
                 MNEMONIC_WRONG_LENGTH,
                 "The mnemonic seed given is the wrong length. It should be "
                 "25 words long, but it is " + std::to_string(len) + " " +
@@ -60,7 +60,7 @@ namespace Mnemonics
             if (std::find(WordList::English.begin(),
                           WordList::English.end(), word) == WordList::English.end())
             {
-                Error error(
+                WalletError error(
                     MNEMONIC_INVALID_WORD,
                     "The mnemonic seed given has a word that is not present "
                     "in the english word list (" + word + ")."

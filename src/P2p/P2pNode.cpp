@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #include "P2pNode.h"
@@ -106,7 +106,7 @@ void doWithTimeoutAndThrow(System::Dispatcher& dispatcher, std::chrono::nanoseco
 
 }
 
-P2pNode::P2pNode(const P2pNodeConfig& cfg, Dispatcher& dispatcher, std::shared_ptr<Logging::ILogger> log, const Crypto::Hash& genesisHash, uint64_t peerId) :
+P2pNode::P2pNode(const P2pNodeConfig& cfg, Dispatcher& dispatcher, Logging::ILogger& log, const Crypto::Hash& genesisHash, uint64_t peerId) :
   logger(log, "P2pNode:" + std::to_string(cfg.getBindPort())),
   m_stopRequested(false),
   m_cfg(cfg),

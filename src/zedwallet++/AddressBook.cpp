@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 ////////////////////////////////////
@@ -8,13 +8,11 @@
 
 #include <config/WalletConfig.h>
 
-#include <Errors/ValidateParameters.h>
-
 #include <fstream>
 
-#include <iostream>
+#include <WalletBackend/ValidateParameters.h>
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet++/ColouredMsg.h>
 #include <zedwallet++/GetInput.h>
 #include <zedwallet++/Transfer.h>
 #include <zedwallet++/Utilities.h>
@@ -30,7 +28,7 @@ const std::string getAddressBookName(const std::vector<AddressBookEntry> address
 
         std::getline(std::cin, friendlyName);
 
-        Common::trim(friendlyName);
+        ZedUtilities::trim(friendlyName);
 
         const auto it = std::find(addressBook.begin(), addressBook.end(),
                                   AddressBookEntry(friendlyName));
@@ -121,7 +119,7 @@ const std::tuple<bool, AddressBookEntry> getAddressBookEntry(
 
         std::getline(std::cin, friendlyName);
 
-        Common::trim(friendlyName);
+        ZedUtilities::trim(friendlyName);
 
         /* \n == no-op */
         if (friendlyName == "")
@@ -258,7 +256,7 @@ void deleteFromAddressBook()
 
         std::getline(std::cin, friendlyName);
 
-        Common::trim(friendlyName);
+        ZedUtilities::trim(friendlyName);
 
         if (friendlyName == "cancel")
         {

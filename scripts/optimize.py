@@ -1,7 +1,7 @@
-# USAGE: Start turtle-service as you usually would
+# USAGE: Start btr-service as you usually would
 # then run `python optimize.py --address $ADDRESS --port $PORT --password $RPCPASS`
 # replacing $ADDRESS, $PORT AND $RPCPASS with your values
-from turtlecoin import Walletd as Wallet
+from btr import Walletd as Wallet
 import time
 import argparse
 parser = argparse.ArgumentParser()

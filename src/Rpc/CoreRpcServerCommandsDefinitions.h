@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-// Copyright (c) 2018, The Karai Developers
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers Copyright (c) 2018, The Karai Developers
 //
 // Please see the included LICENSE file for more information.
 
@@ -218,34 +218,6 @@ struct RandomOuts {
     KV_MEMBER(outs);
   }
 };
-
-inline void to_json(nlohmann::json &j, const RandomOuts &r)
-{
-    j = {
-        {"amount", r.amount},
-        {"outs", r.outs}
-    };
-}
-
-inline void from_json(const nlohmann::json &j, RandomOuts &r)
-{
-    r.amount = j.at("amount").get<uint64_t>();
-    r.outs = j.at("outs").get<std::vector<OutputEntry>>();
-}
-
-inline void to_json(nlohmann::json &j, const OutputEntry &o)
-{
-    j = {
-        {"global_amount_index", o.global_amount_index},
-        {"out_key", o.out_key}
-    };
-}
-
-inline void from_json(const nlohmann::json &j, OutputEntry &o)
-{
-    o.global_amount_index = j.at("global_amount_index").get<uint32_t>();
-    o.out_key = j.at("out_key").get<Crypto::PublicKey>();
-}
 
 struct COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOUNTS
 {
@@ -817,7 +789,7 @@ struct COMMAND_RPC_GET_WALLET_SYNC_DATA {
     uint64_t startTimestamp;
 
     void serialize(ISerializer &s) {
-      s(blockIds, "blockHashCheckpoints");
+      KV_MEMBER(blockIds);
       KV_MEMBER(startHeight);
       KV_MEMBER(startTimestamp);
     }
@@ -829,7 +801,7 @@ struct COMMAND_RPC_GET_WALLET_SYNC_DATA {
 
     void serialize(ISerializer &s) {
       KV_MEMBER(status)
-      KV_MEMBER(items);
+      KV_MEMBER(items)
     }
   };
 };

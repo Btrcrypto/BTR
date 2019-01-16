@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 /////////////////////////////
@@ -7,8 +7,6 @@
 /////////////////////////////
 
 #include <config/WalletConfig.h>
-
-#include <Utilities/FormatTools.h>
 
 #include <zedwallet++/CommandDispatcher.h>
 #include <zedwallet++/Commands.h>
@@ -51,25 +49,6 @@ std::tuple<bool, bool, std::shared_ptr<WalletBackend>> selectionScreen(const Con
             return {exit, sync, nullptr};
         }
 
-        const auto [feeAmount, feeAddress] = walletBackend->getNodeFee();
-
-        if (feeAmount != 0)
-        {
-            std::stringstream feemsg;
-
-            feemsg << "You have connected to a node that charges "
-                      "a fee to send transactions.\n\n"
-                      "The fee for sending transactions is: "
-                   << Utilities::formatAmount(feeAmount)
-                   << " per transaction.\n\n"
-                      "If you don't want to pay the node fee, please "
-                      "relaunch "
-                   << WalletConfig::walletName
-                   << " and specify a different node or run your own.";
-
-            std::cout << WarningMsg(feemsg.str()) << std::endl;
-        }
-
         /* If we're creating a wallet, don't print the lengthy sync process */
         if (launchCommand == "create")
         {
@@ -101,7 +80,11 @@ bool checkNodeStatus(const std::shared_ptr<WalletBackend> walletBackend)
 {
     while (true)
     {
-        if (walletBackend->daemonOnline())
+        const auto [walletBlockCount, localDaemonBlockCount, networkBlockCount]
+            = walletBackend->getSyncStatus();
+
+        /* Daemon is online */
+        if (networkBlockCount != 0 || localDaemonBlockCount != 0)
         {
             break;
         }

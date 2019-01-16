@@ -1,20 +1,20 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 ///////////////////////////////////////////////
 #include <zedwallet++/CommandImplementations.h>
 ///////////////////////////////////////////////
 
-#include <config/WalletConfig.h>
+#include <Common/FormatTools.h>
 
-#include <Errors/ValidateParameters.h>
+#include <config/WalletConfig.h>
 
 #include <fstream>
 
-#include <Utilities/FormatTools.h>
+#include <WalletBackend/ValidateParameters.h>
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet++/ColouredMsg.h>
 #include <zedwallet++/Commands.h>
 #include <zedwallet++/GetInput.h>
 #include <zedwallet++/Menu.h>
@@ -32,7 +32,7 @@ void changePassword(const std::shared_ptr<WalletBackend> walletBackend)
         = getWalletPassword(true, "Enter your new password: ");
 
     /* Change the wallet password */
-    Error error = walletBackend->changePassword(newPassword);
+    WalletError error = walletBackend->changePassword(newPassword);
 
     if (error)
     {
@@ -57,7 +57,7 @@ void printPrivateKeys(const std::shared_ptr<WalletBackend> walletBackend)
 {
     const auto [privateSpendKey, privateViewKey] = walletBackend->getPrimaryAddressPrivateKeys();
 
-    const auto [error, mnemonicSeed] = walletBackend->getMnemonicSeed();
+    const auto [hasMnemonicSeed, mnemonicSeed] = walletBackend->getMnemonicSeed();
 
     std::cout << SuccessMsg("Private view key:\n")
               << SuccessMsg(privateViewKey) << "\n";
@@ -71,7 +71,7 @@ void printPrivateKeys(const std::shared_ptr<WalletBackend> walletBackend)
     std::cout << SuccessMsg("\nPrivate spend key:\n")
               << SuccessMsg(privateSpendKey) << "\n";
 
-    if (!error)
+    if (hasMnemonicSeed)
     {
         std::cout << SuccessMsg("\nMnemonic seed:\n")
                   << SuccessMsg(mnemonicSeed) << "\n";
@@ -84,7 +84,7 @@ void balance(const std::shared_ptr<WalletBackend> walletBackend)
 
     /* We can make a better approximation of the view wallet balance if we
        ignore fusion transactions.
-       See https://github.com/turtlecoin/turtlecoin/issues/531 */
+       See https://github.com/btr/btr/issues/531 */
     if (walletBackend->isViewWallet())
     {
         unlockedBalance = 0;
@@ -103,11 +103,11 @@ void balance(const std::shared_ptr<WalletBackend> walletBackend)
     const uint64_t totalBalance = unlockedBalance + lockedBalance;
 
     std::cout << "Available balance: "
-              << SuccessMsg(Utilities::formatAmount(unlockedBalance)) << "\n"
+              << SuccessMsg(ZedUtilities::formatAmount(unlockedBalance)) << "\n"
               << "Locked (unconfirmed) balance: "
-              << WarningMsg(Utilities::formatAmount(lockedBalance))
+              << WarningMsg(ZedUtilities::formatAmount(lockedBalance))
               << "\nTotal balance: "
-              << InformationMsg(Utilities::formatAmount(totalBalance)) << "\n";
+              << InformationMsg(ZedUtilities::formatAmount(totalBalance)) << "\n";
 
     if (walletBackend->isViewWallet())
     {
@@ -179,10 +179,10 @@ void printSyncStatus(
     const uint64_t walletBlockCount)
 {
     std::string networkSyncPercentage
-        = Utilities::get_sync_percentage(localDaemonBlockCount, networkBlockCount) + "%";
+        = Common::get_sync_percentage(localDaemonBlockCount, networkBlockCount) + "%";
 
     std::string walletSyncPercentage
-        = Utilities::get_sync_percentage(walletBlockCount, networkBlockCount) + "%";
+        = Common::get_sync_percentage(walletBlockCount, networkBlockCount) + "%";
 
     std::cout << "Network sync status: ";
 
@@ -249,7 +249,7 @@ void printHashrate(const uint64_t hashrate)
     }
 
     std::cout << "Network hashrate: "
-              << SuccessMsg(Utilities::get_mining_speed(hashrate))
+              << SuccessMsg(Common::get_mining_speed(hashrate))
               << " (Based on the last local block)" << std::endl;
 }
 
@@ -355,7 +355,7 @@ void saveCSV(const std::shared_ptr<WalletBackend> walletBackend)
             continue;
         }
 
-        const std::string amount = Utilities::formatAmountBasic(std::abs(tx.totalAmount()));
+        const std::string amount = ZedUtilities::formatAmountBasic(std::abs(tx.totalAmount()));
 
         const std::string direction = tx.totalAmount() > 0 ? "IN" : "OUT";
 
@@ -388,9 +388,9 @@ void printOutgoingTransfer(const WalletTypes::Transaction tx)
                << "Timestamp: " << ZedUtilities::unixTimeToDate(tx.timestamp) << "\n";
     }
 
-    stream << "Spent: " << Utilities::formatAmount(amount - tx.fee) << "\n"
-           << "Fee: " << Utilities::formatAmount(tx.fee) << "\n"
-           << "Total Spent: " << Utilities::formatAmount(amount) << "\n";
+    stream << "Spent: " << ZedUtilities::formatAmount(amount - tx.fee) << "\n"
+           << "Fee: " << ZedUtilities::formatAmount(tx.fee) << "\n"
+           << "Total Spent: " << ZedUtilities::formatAmount(amount) << "\n";
 
     if (tx.paymentID != "")
     {
@@ -409,7 +409,7 @@ void printIncomingTransfer(const WalletTypes::Transaction tx)
     stream << "Incoming transfer:\nHash: " << tx.hash << "\n"
            << "Block height: " << tx.blockHeight << "\n"
            << "Timestamp: " << ZedUtilities::unixTimeToDate(tx.timestamp) << "\n"
-           << "Amount: " << Utilities::formatAmount(amount) << "\n";
+           << "Amount: " << ZedUtilities::formatAmount(amount) << "\n";
 
     if (tx.paymentID != "")
     {
@@ -474,7 +474,7 @@ void listTransfers(
     {
         std::cout << SuccessMsg(numIncomingTransactions)
                   << SuccessMsg(" incoming transactions, totalling ")
-                  << SuccessMsg(Utilities::formatAmount(totalReceived))
+                  << SuccessMsg(ZedUtilities::formatAmount(totalReceived))
                   << std::endl;
     }
 
@@ -482,7 +482,7 @@ void listTransfers(
     {
         std::cout << WarningMsg(numOutgoingTransactions)
                   << WarningMsg(" outgoing transactions, totalling ")
-                  << WarningMsg(Utilities::formatAmount(totalSpent))
+                  << WarningMsg(ZedUtilities::formatAmount(totalSpent))
                   << std::endl;
     }
 }
@@ -491,7 +491,7 @@ void save(const std::shared_ptr<WalletBackend> walletBackend)
 {
     std::cout << InformationMsg("Saving.") << std::endl;
 
-    Error error = walletBackend->save();
+    WalletError error = walletBackend->save();
 
     if (error)
     {
@@ -519,11 +519,11 @@ void createIntegratedAddress()
 
         std::getline(std::cin, address);
 
-        Common::trim(address);
+        ZedUtilities::trim(address);
 
         const bool integratedAddressesAllowed = false;
 
-        if (Error error = validateAddresses({address}, integratedAddressesAllowed); error != SUCCESS)
+        if (WalletError error = validateAddresses({address}, integratedAddressesAllowed); error != SUCCESS)
         {
             std::cout << WarningMsg("Invalid address: ")
                       << WarningMsg(error) << std::endl;
@@ -540,10 +540,10 @@ void createIntegratedAddress()
 
         std::getline(std::cin, paymentID);
 
-        Common::trim(paymentID);
+        ZedUtilities::trim(paymentID);
 
         /* Validate the payment ID */
-        if (Error error = validatePaymentID(paymentID); error != SUCCESS)
+        if (WalletError error = validatePaymentID(paymentID); error != SUCCESS)
         {
             std::cout << WarningMsg("Invalid payment ID: ")
                       << WarningMsg(error) << std::endl;

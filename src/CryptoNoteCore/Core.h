@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -33,7 +33,7 @@ namespace CryptoNote {
 
 class Core : public ICore, public ICoreInformation {
 public:
-  Core(const Currency& currency, std::shared_ptr<Logging::ILogger> logger, Checkpoints&& checkpoints, System::Dispatcher& dispatcher,
+  Core(const Currency& currency, Logging::ILogger& logger, Checkpoints&& checkpoints, System::Dispatcher& dispatcher,
        std::unique_ptr<IBlockchainCacheFactory>&& blockchainCacheFactory, std::unique_ptr<IMainChainStorage>&& mainChainStorage);
   virtual ~Core();
 
@@ -96,7 +96,6 @@ public:
   virtual bool addTransactionToPool(const BinaryArray& transactionBinaryArray) override;
 
   virtual std::vector<Crypto::Hash> getPoolTransactionHashes() const override;
-  virtual std::tuple<bool, BinaryArray> getPoolTransaction(const Crypto::Hash& transactionHash) const override;
   virtual bool getPoolChanges(const Crypto::Hash& lastBlockHash, const std::vector<Crypto::Hash>& knownHashes, std::vector<BinaryArray>& addedTransactions,
     std::vector<Crypto::Hash>& deletedTransactions) const override;
   virtual bool getPoolChangesLite(const Crypto::Hash& lastBlockHash, const std::vector<Crypto::Hash>& knownHashes, std::vector<TransactionPrefixInfo>& addedTransactions,

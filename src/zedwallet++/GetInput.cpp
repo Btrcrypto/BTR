@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 /////////////////////////////////
@@ -8,13 +8,11 @@
 
 #include <config/WalletConfig.h>
 
-#include <Errors/ValidateParameters.h>
-
 #include "linenoise.hpp"
 
-#include <Utilities/FormatTools.h>
+#include <WalletBackend/ValidateParameters.h>
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet++/ColouredMsg.h>
 #include <zedwallet++/Commands.h>
 #include <zedwallet++/Utilities.h>
 
@@ -89,7 +87,7 @@ std::string getInput(
     }
 	
     /* Remove any whitespace */
-    Common::trim(command);
+    ZedUtilities::trim(command);
 
     if (command != "")
     {
@@ -116,7 +114,7 @@ std::string getAddress(
             return "cancel";
         }
 
-        Common::trim(address);
+        ZedUtilities::trim(address);
 
         /* \n == no-op */
         if (address == "")
@@ -129,7 +127,7 @@ std::string getAddress(
             return address;
         }
 
-        if (Error error = validateAddresses({address}, integratedAddressesAllowed); error != SUCCESS)
+        if (WalletError error = validateAddresses({address}, integratedAddressesAllowed); error != SUCCESS)
         {
             std::cout << WarningMsg("Invalid address: ")
                       << WarningMsg(error) << std::endl;
@@ -160,7 +158,7 @@ std::string getPaymentID(
             return "cancel";
         }
 
-        Common::trim(paymentID);
+        ZedUtilities::trim(paymentID);
 
         if (paymentID == "cancel" && cancelAllowed)
         {
@@ -173,7 +171,7 @@ std::string getPaymentID(
         }
 
         /* Validate the payment ID */
-        if (Error error = validatePaymentID(paymentID); error != SUCCESS)
+        if (WalletError error = validatePaymentID(paymentID); error != SUCCESS)
         {
             std::cout << WarningMsg("Invalid payment ID: ")
                       << WarningMsg(error) << std::endl;
@@ -207,7 +205,7 @@ std::tuple<bool, uint64_t> getAmountToAtomic(
             continue;
         }
 
-        Common::trim(amountString);
+        ZedUtilities::trim(amountString);
 
         /* If the user entered thousand separators, remove them */
         ZedUtilities::removeCharFromString(amountString, ',');
@@ -252,7 +250,7 @@ std::tuple<bool, uint64_t> getAmountToAtomic(
             if (amount < WalletConfig::minimumSend)
             {
                 std::cout << WarningMsg("The minimum send allowed is ")
-                          << WarningMsg(Utilities::formatAmount(WalletConfig::minimumSend))
+                          << WarningMsg(ZedUtilities::formatAmount(WalletConfig::minimumSend))
                           << WarningMsg("!\n");
             }
             else
@@ -289,7 +287,7 @@ std::tuple<std::string, uint16_t> getDaemonAddress()
             return {host, port};
         }
 
-        Common::trim(address);
+        ZedUtilities::trim(address);
 
         if (!ZedUtilities::parseDaemonAddressFromString(host, port, address))
         {

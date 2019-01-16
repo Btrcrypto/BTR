@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 ////////////////////////////////
@@ -16,7 +16,7 @@
 #include <windows.h>
 #endif
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet/ColouredMsg.h>
 #include <zedwallet/Menu.h>
 #include <zedwallet/ParseArguments.h>
 #include <zedwallet/Tools.h>
@@ -36,17 +36,23 @@ int main(int argc, char **argv)
 
     std::cout << InformationMsg(CryptoNote::getProjectCLIHeader()) << std::endl;
 
-    const auto logManager = std::make_shared<Logging::LoggerManager>();
+    Logging::LoggerManager logManager;
+
+    /* We'd like these lines to be in the below if(), but because some genius
+       thought it was a good idea to pass everything by reference and then
+       use them after the functions lifetime they go out of scope and break
+       stuff */
+    logManager.setMaxLevel(Logging::DEBUGGING);
+
+    Logging::FileLogger fileLogger;
 
     if (config.debug)
     {
-        logManager->setMaxLevel(Logging::DEBUGGING);
-
-        Logging::FileLogger fileLogger;
-
         fileLogger.init(WalletConfig::walletName + ".log");
-        logManager->addLogger(fileLogger);
+        logManager.addLogger(fileLogger);
     }
+
+    Logging::LoggerRef logger(logManager, WalletConfig::walletName);
 
     /* Currency contains our coin parameters, such as decimal places, supply */
     const CryptoNote::Currency currency 
@@ -55,10 +61,10 @@ int main(int argc, char **argv)
     System::Dispatcher localDispatcher;
     System::Dispatcher *dispatcher = &localDispatcher;
 
-    /* Our connection to turtlecoind */
+    /* Our connection to btrd */
     std::unique_ptr<CryptoNote::INode> node(
-        new CryptoNote::NodeRpcProxy(config.host, config.port, logManager)
-    );
+        new CryptoNote::NodeRpcProxy(config.host, config.port, 
+                                     logger.getLogger()));
 
     std::promise<std::error_code> errorPromise;
 
@@ -117,7 +123,8 @@ int main(int argc, char **argv)
     }
 
     /* Create the wallet instance */
-    CryptoNote::WalletGreen wallet(*dispatcher, currency, *node, logManager);
+    CryptoNote::WalletGreen wallet(*dispatcher, currency, *node, 
+                                   logger.getLogger());
 
     /* Run the interactive wallet interface */
     run(wallet, *node, config);
