@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 /////////////////////////////////
@@ -53,7 +53,6 @@ std::vector<AdvancedCommand> allCommands()
         AdvancedCommand("ab_list", "List everyone in your address book", true, true),
         AdvancedCommand("ab_send", "Send " + WalletConfig::ticker + " to someone in your address book", false, true),
         AdvancedCommand("change_password", "Change your wallet password", true, true),
-        AdvancedCommand("get_tx_private_key", "Get the private key of a transaction", true, true),
         AdvancedCommand("make_integrated_address", "Make a combined address + payment ID", true, true),
         AdvancedCommand("incoming_transfers", "Show incoming transfers", true, true),
         AdvancedCommand("list_transfers", "Show all transfers", false, true),

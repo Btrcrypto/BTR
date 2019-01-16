@@ -1,7 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2014-2018, The Monero Project
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #include "NetNode.h"
@@ -174,7 +173,7 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     return ret;
   }
 
-  NodeServer::NodeServer(System::Dispatcher& dispatcher, CryptoNote::CryptoNoteProtocolHandler& payload_handler, std::shared_ptr<Logging::ILogger> log) :
+  NodeServer::NodeServer(System::Dispatcher& dispatcher, CryptoNote::CryptoNoteProtocolHandler& payload_handler, Logging::ILogger& log) :
     m_dispatcher(dispatcher),
     m_workingContextGroup(dispatcher),
     m_payload_handler(payload_handler),
@@ -296,19 +295,6 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     });
   }
 
-  //-----------------------------------------------------------------------------------
-  void NodeServer::externalRelayNotifyToList(int command, const BinaryArray& data_buff, const std::list<boost::uuids::uuid> relayList) {
-    m_dispatcher.remoteSpawn([this, command, data_buff, relayList] {
-      forEachConnection([&](P2pConnectionContext& conn) {
-        if (std::find(relayList.begin(), relayList.end(), conn.m_connection_id) != relayList.end()) {
-          if (conn.peerId && (conn.m_state == CryptoNoteConnectionContext::state_normal ||
-               conn.m_state == CryptoNoteConnectionContext::state_synchronizing)) {
-            conn.pushMessage(P2pMessage(P2pMessage::NOTIFY, command, data_buff));
-          }
-        }
-      });
-    });
-  }
   //-----------------------------------------------------------------------------------
   bool NodeServer::make_default_config()
   {
@@ -877,7 +863,7 @@ std::string print_peerlist_to_string(const std::list<PeerlistEntry>& pl) {
     {
       if(be.last_seen > uint64_t(local_time))
       {
-        logger(DEBUGGING) << "FOUND FUTURE peerlist for entry " << be.adr << " last_seen: " << be.last_seen << ", local_time(on remote node):" << local_time;
+        logger(ERROR) << "FOUND FUTURE peerlist for entry " << be.adr << " last_seen: " << be.last_seen << ", local_time(on remote node):" << local_time;
         return false;
       }
       be.last_seen += delta;

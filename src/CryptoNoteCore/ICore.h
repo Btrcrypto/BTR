@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -94,7 +94,6 @@ public:
   virtual bool addTransactionToPool(const BinaryArray& transactionBinaryArray) = 0;
 
   virtual std::vector<Crypto::Hash> getPoolTransactionHashes() const = 0;
-  virtual std::tuple<bool, CryptoNote::BinaryArray> getPoolTransaction(const Crypto::Hash& transactionHash) const = 0;
   virtual bool getPoolChanges(const Crypto::Hash& lastBlockHash, const std::vector<Crypto::Hash>& knownHashes,
                               std::vector<BinaryArray>& addedTransactions,
                               std::vector<Crypto::Hash>& deletedTransactions) const = 0;

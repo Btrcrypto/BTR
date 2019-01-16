@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 /////////////////////////////
@@ -10,11 +10,9 @@
 
 #include <config/WalletConfig.h>
 
-#include <iostream>
-
 #include <thread>
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet++/ColouredMsg.h>
 #include <zedwallet++/CommandImplementations.h>
 
 void syncWallet(const std::shared_ptr<WalletBackend> walletBackend)

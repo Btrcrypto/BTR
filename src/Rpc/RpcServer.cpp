@@ -1,37 +1,25 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-// Copyright (c) 2018, The Karai Developers
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers Copyright (c) 2018, The Karai Developers
 //
 // Please see the included LICENSE file for more information.
 
-//////////////////////////
-#include <Rpc/RpcServer.h>
-//////////////////////////
-
-#include <cmath>
-
-#include <Common/StringTools.h>
-
-#include <config/CryptoNoteConfig.h>
-
-#include <CryptoNoteCore/Core.h>
-#include <CryptoNoteCore/CryptoNoteTools.h>
-#include <CryptoNoteCore/TransactionExtra.h>
-
-#include <CryptoNoteProtocol/CryptoNoteProtocolHandlerCommon.h>
-
+#include "RpcServer.h"
 #include <future>
-
-#include <P2p/NetNode.h>
-
-#include <Rpc/CoreRpcServerErrorCodes.h>
-#include <Rpc/JsonRpc.h>
-
-#include "version.h"
-
 #include <unordered_map>
+#include "math.h"
 
-#include <Utilities/FormatTools.h>
+// CryptoNote
+#include "Common/StringTools.h"
+#include "CryptoNoteCore/CryptoNoteTools.h"
+#include "CryptoNoteCore/Core.h"
+#include "CryptoNoteCore/TransactionExtra.h"
+#include <config/CryptoNoteConfig.h>
+#include "CryptoNoteProtocol/CryptoNoteProtocolHandlerCommon.h"
+#include "P2p/NetNode.h"
+#include "CoreRpcServerErrorCodes.h"
+#include "JsonRpc.h"
+#include "version.h"
 
 #undef ERROR
 
@@ -67,35 +55,35 @@ void serialize(BlockShortInfo& blockShortInfo, ISerializer& s) {
 
 void serialize(WalletTypes::WalletBlockInfo &walletBlockInfo, ISerializer &s)
 {
-    s(walletBlockInfo.coinbaseTransaction, "coinbaseTX");
-    s(walletBlockInfo.transactions, "transactions");
-    s(walletBlockInfo.blockHeight, "blockHeight");
-    s(walletBlockInfo.blockHash, "blockHash");
-    s(walletBlockInfo.blockTimestamp, "blockTimestamp");
+    KV_MEMBER(walletBlockInfo.coinbaseTransaction);
+    KV_MEMBER(walletBlockInfo.transactions);
+    KV_MEMBER(walletBlockInfo.blockHeight);
+    KV_MEMBER(walletBlockInfo.blockHash);
+    KV_MEMBER(walletBlockInfo.blockTimestamp);
 }
 
 void serialize(WalletTypes::RawTransaction &rawTransaction, ISerializer &s)
 {
-    s(rawTransaction.keyInputs, "inputs");
-    s(rawTransaction.paymentID, "paymentID");
-    s(rawTransaction.keyOutputs, "outputs");
-    s(rawTransaction.hash, "hash");
-    s(rawTransaction.transactionPublicKey, "txPublicKey");
-    s(rawTransaction.unlockTime, "unlockTime");
+    KV_MEMBER(rawTransaction.keyInputs);
+    KV_MEMBER(rawTransaction.paymentID);
+    KV_MEMBER(rawTransaction.keyOutputs);
+    KV_MEMBER(rawTransaction.hash);
+    KV_MEMBER(rawTransaction.transactionPublicKey);
+    KV_MEMBER(rawTransaction.unlockTime);
 }
 
 void serialize(WalletTypes::RawCoinbaseTransaction &rawCoinbaseTransaction, ISerializer &s)
 {
-    s(rawCoinbaseTransaction.keyOutputs, "outputs");
-    s(rawCoinbaseTransaction.hash, "hash");
-    s(rawCoinbaseTransaction.transactionPublicKey, "txPublicKey");
-    s(rawCoinbaseTransaction.unlockTime, "unlockTime");
+    KV_MEMBER(rawCoinbaseTransaction.keyOutputs);
+    KV_MEMBER(rawCoinbaseTransaction.hash);
+    KV_MEMBER(rawCoinbaseTransaction.transactionPublicKey);
+    KV_MEMBER(rawCoinbaseTransaction.unlockTime);
 }
 
 void serialize(WalletTypes::KeyOutput &keyOutput, ISerializer &s)
 {
-    s(keyOutput.key, "key");
-    s(keyOutput.amount, "amount");
+    KV_MEMBER(keyOutput.key);
+    KV_MEMBER(keyOutput.amount);
 }
 
 namespace {
@@ -162,7 +150,7 @@ std::unordered_map<std::string, RpcServer::RpcHandler<RpcServer::HandlerFunction
   { "/json_rpc", { std::bind(&RpcServer::processJsonRpcRequest, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), true } }
 };
 
-RpcServer::RpcServer(System::Dispatcher& dispatcher, std::shared_ptr<Logging::ILogger> log, Core& c, NodeServer& p2p, ICryptoNoteProtocolHandler& protocol) :
+RpcServer::RpcServer(System::Dispatcher& dispatcher, Logging::ILogger& log, Core& c, NodeServer& p2p, ICryptoNoteProtocolHandler& protocol) :
   HttpServer(dispatcher, log), logger(log, "RpcServer"), m_core(c), m_p2p(p2p), m_protocol(protocol) {
 }
 
@@ -410,18 +398,6 @@ bool RpcServer::on_get_random_outs(const COMMAND_RPC_GET_RANDOM_OUTPUTS_FOR_AMOU
     std::vector<Crypto::PublicKey> publicKeys;
     if (!m_core.getRandomOutputs(amount, static_cast<uint16_t>(req.outs_count), globalIndexes, publicKeys)) {
       return true;
-    }
-
-    if (globalIndexes.size() != req.outs_count)
-    {
-        logger(ERROR) << "Failed to get enough matching outputs for amount "
-                      << amount << " (" << Utilities::formatAmount(amount)
-                      << "). Requested outputs: " << req.outs_count
-                      << ", found outputs: " << globalIndexes.size()
-                      << ". Further explanation here: https://gist.github.com/zpalmtree/80b3e80463225bcfb8f8432043cb594c"
-                      << std::endl
-                      << "Note: If you are a public node operator, you can safely ignore this message. "
-                      << "It is only relevant to the user sending the transaction.";
     }
 
     assert(globalIndexes.size() == publicKeys.size());
@@ -1088,7 +1064,7 @@ bool RpcServer::on_submitblock(const COMMAND_RPC_SUBMITBLOCK::request& req, COMM
   if (submitResult == error::AddBlockErrorCode::ADDED_TO_MAIN
       || submitResult == error::AddBlockErrorCode::ADDED_TO_ALTERNATIVE_AND_SWITCHED) {
     NOTIFY_NEW_BLOCK::request newBlockMessage;
-    newBlockMessage.block = prepareRawBlockLegacy(std::move(blockToSend));
+    newBlockMessage.b = prepareRawBlockLegacy(std::move(blockToSend));
     newBlockMessage.hop = 0;
     newBlockMessage.current_blockchain_height = m_core.getTopBlockIndex() + 1; //+1 because previous version of core sent m_blocks.size()
 
@@ -1106,7 +1082,7 @@ RawBlockLegacy RpcServer::prepareRawBlockLegacy(BinaryArray&& blockBlob) {
   assert(result);
 
   RawBlockLegacy rawBlock;
-  rawBlock.blockTemplate = std::move(blockBlob);
+  rawBlock.block = std::move(blockBlob);
 
   if (blockTemplate.transactionHashes.empty()) {
     return rawBlock;

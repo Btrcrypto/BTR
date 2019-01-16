@@ -1,18 +1,14 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 ///////////////////////////////
 #include <zedwallet++/Fusion.h>
 ///////////////////////////////
 
-#include <iostream>
-
-#include <Utilities/FormatTools.h>
-
 #include <WalletBackend/WalletBackend.h>
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet++/ColouredMsg.h>
 #include <zedwallet++/Utilities.h>
 
 void optimize(const std::shared_ptr<WalletBackend> walletBackend)
@@ -63,7 +59,7 @@ bool optimizeRound(const std::shared_ptr<WalletBackend> walletBackend)
 
             std::stringstream stream;
 
-            stream << "Failed to send fusion transaction: " << error << "\n";
+            stream << "Failed to send fusion transction: " << error << "\n";
 
             std::cout << WarningMsg(stream.str());
         }
@@ -86,13 +82,13 @@ bool optimizeRound(const std::shared_ptr<WalletBackend> walletBackend)
     {
         std::cout << InformationMsg("Waiting for balance to return and unlock:\n"
                                     "\nTotal balance: ")
-                  << InformationMsg(Utilities::formatAmount(initialBalance))
+                  << InformationMsg(ZedUtilities::formatAmount(initialBalance))
 
                   << WarningMsg("\nLocked balance: ")
-                  << WarningMsg(Utilities::formatAmount(initialBalance - currentBalance))
+                  << WarningMsg(ZedUtilities::formatAmount(initialBalance - currentBalance))
 
                   << SuccessMsg("\nUnlocked balance: ")
-                  << SuccessMsg(Utilities::formatAmount(currentBalance))
+                  << SuccessMsg(ZedUtilities::formatAmount(currentBalance))
 
                   << InformationMsg("\nWill check again in 15 seconds...\n\n");
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-// Copyright (c) 2018, The Karai Developers
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers Copyright (c) 2018, The Karai Developers
 //
 // Please see the included LICENSE file for more information.
 
@@ -44,7 +44,7 @@ using namespace CryptoNote;
 using namespace Logging;
 using namespace DaemonConfig;
 
-void print_genesis_tx_hex(const std::vector<std::string> rewardAddresses, const bool blockExplorerMode, std::shared_ptr<LoggerManager> logManager)
+void print_genesis_tx_hex(const std::vector<std::string> rewardAddresses, const bool blockExplorerMode, LoggerManager& logManager)
 {
   std::vector<CryptoNote::AccountPublicAddress> rewardTargets;
 
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
   _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-  const auto logManager = std::make_shared<LoggerManager>();
+  LoggerManager logManager;
   LoggerRef logger(logManager, "daemon");
 
   // Initial loading of CLI parameters
@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
     Level cfgLogLevel = static_cast<Level>(static_cast<int>(Logging::ERROR) + config.logLevel);
 
     // configure logging
-    logManager->configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile));
+    logManager.configure(buildLoggerConfiguration(cfgLogLevel, cfgLogFile));
 
     logger(INFO, BRIGHT_GREEN) << getProjectCLIHeader() << std::endl;
 
@@ -320,9 +320,9 @@ int main(int argc, char* argv[])
     rpcServer.start(config.rpcInterface, config.rpcPort);
     logger(INFO) << "Core rpc server started ok";
 
-    Tools::SignalHandler::install([&dch] {
-       dch.exit({});
-       dch.stop_handling();
+    Tools::SignalHandler::install([&dch, &p2psrv] {
+      dch.stop_handling();
+      p2psrv.sendStopSignal();
     });
 
     logger(INFO) << "Starting p2p net loop...";

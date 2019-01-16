@@ -52,7 +52,7 @@ public:
   P2pNode(
     const P2pNodeConfig& cfg,
     System::Dispatcher& dispatcher, 
-    std::shared_ptr<Logging::ILogger> log, 
+    Logging::ILogger& log, 
     const Crypto::Hash& genesisHash, 
     uint64_t peerId);
 

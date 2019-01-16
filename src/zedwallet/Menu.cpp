@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 ///////////////////////////
@@ -8,7 +8,7 @@
 
 #include <Common/SignalHandler.h>
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet/ColouredMsg.h>
 #include <zedwallet/CommandDispatcher.h>
 #include <zedwallet/Commands.h>
 #include <zedwallet/GetInput.h>
@@ -66,23 +66,6 @@ std::string parseCommand(const std::vector<T> &printableCommands,
             }
 
             selection = availableCommands[selectionNum].commandName;
-        }
-        /* Too lazy to dedupe this part, lol */
-        catch (const std::out_of_range &)
-        {
-            int numCommands = static_cast<int>(availableCommands.size());
-
-            std::cout << WarningMsg("Bad input, expected a command name, ")
-                      << WarningMsg("or number from ")
-                      << InformationMsg("1")
-                      << WarningMsg(" to ")
-                      << InformationMsg(std::to_string(numCommands))
-                      << std::endl;
-
-            /* Print the available commands again if the input is bad */
-            printCommands(printableCommands);
-
-            continue;
         }
         /* Input ain't a number */
         catch (const std::invalid_argument &)

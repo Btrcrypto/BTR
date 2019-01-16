@@ -2,8 +2,8 @@
 // Copyright (c) 2014-2018, The Monero Project
 // Copyright (c) 2018, The BBSCoin Developers
 // Copyright (c) 2018, The Karbo Developers
-// Copyright (c) 2018, The TurtleCoin Developers
-//
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers
 // Please see the included LICENSE file for more information.
 
 #include "WalletGreen.h"
@@ -120,7 +120,7 @@ uint64_t calculateDonationAmount(uint64_t freeAmount, uint64_t donationThreshold
 
 namespace CryptoNote {
 
-WalletGreen::WalletGreen(System::Dispatcher& dispatcher, const Currency& currency, INode& node, std::shared_ptr<Logging::ILogger> logger, uint32_t transactionSoftLockTime) :
+WalletGreen::WalletGreen(System::Dispatcher& dispatcher, const Currency& currency, INode& node, Logging::ILogger& logger, uint32_t transactionSoftLockTime) :
   m_dispatcher(dispatcher),
   m_currency(currency),
   m_node(node),
@@ -1437,8 +1437,7 @@ size_t WalletGreen::transfer(const TransactionParameters& transactionParameters)
 
 uint64_t WalletGreen::getBalanceMinusDust(const std::vector<std::string>& addresses)
 {
-    std::vector<WalletOuts> wallets = addresses.empty() ? pickWalletsWithMoney() : pickWallets(addresses);
-
+    std::vector<WalletOuts> wallets = pickWallets(addresses);
     std::vector<OutputToTransfer> unused;
 
     /* We want to get the full balance, so don't stop getting outputs early */

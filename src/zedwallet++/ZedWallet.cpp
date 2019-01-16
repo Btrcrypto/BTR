@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 #include <iostream>
@@ -8,7 +8,7 @@
 
 #include <config/CliHeader.h>
 
-#include <Utilities/ColouredMsg.h>
+#include <zedwallet++/ColouredMsg.h>
 #include <zedwallet++/Menu.h>
 #include <zedwallet++/ParseArguments.h>
 #include <zedwallet++/Sync.h>
@@ -102,10 +102,9 @@ int main(int argc, char **argv)
         }
 
         /* Launch the thread which watches for the shutdown signal */
-        ctrlCWatcher = std::thread([&ctrl_c, &stop, &walletBackend = walletBackend]
-        {
-            shutdown(ctrl_c, stop, walletBackend);
-        });
+        ctrlCWatcher = std::thread(
+            shutdown, std::ref(ctrl_c), std::ref(stop), std::ref(walletBackend)
+        );
 
         /* Trigger the shutdown signal if ctrl+c is used
            We do the actual handling in a separate thread to handle stuff not

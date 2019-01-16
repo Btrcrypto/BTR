@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -33,7 +33,3 @@ std::string getInput(
     const std::string prompt);
 
 std::tuple<std::string, uint16_t> getDaemonAddress();
-
-std::string getHash(
-    const std::string msg,
-    const bool cancelAllowed);

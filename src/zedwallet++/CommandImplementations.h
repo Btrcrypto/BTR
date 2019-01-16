@@ -1,5 +1,5 @@
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
 #pragma once
@@ -55,5 +55,3 @@ void help(const std::shared_ptr<WalletBackend> walletBackend);
 void advanced(const std::shared_ptr<WalletBackend> walletBackend);
 
 void swapNode(const std::shared_ptr<WalletBackend> walletBackend);
-
-void getTxPrivateKey(const std::shared_ptr<WalletBackend> walletBackend);

@@ -1,30 +1,22 @@
 // Copyright (c) 2012-2017, The CryptoNote developers, The Bytecoin developers
-// Copyright (c) 2018, The TurtleCoin Developers
-// 
+// Copyright (c) 2018,   The TURTLECOIN Developers
+// Copyright (c) 2018, The BitcoinRich Developers 
 // Please see the included LICENSE file for more information.
 
-#include <boost/format.hpp>
+#include "DaemonCommandsHandler.h"
 
 #include <ctime>
-
-#include <CryptoNoteCore/Core.h>
-#include <CryptoNoteCore/CryptoNoteFormatUtils.h>
-#include <CryptoNoteCore/Currency.h>
-
-#include <CryptoNoteProtocol/CryptoNoteProtocolHandler.h>
-
-#include <Daemon/DaemonCommandsHandler.h>
-
-#include <P2p/NetNode.h>
-
-#include <Rpc/JsonRpc.h>
-
-#include <Serialization/SerializationTools.h>
-
-#include <Utilities/FormatTools.h>
-#include <Utilities/ColouredMsg.h>
-
+#include "P2p/NetNode.h"
+#include "CryptoNoteCore/Core.h"
+#include "CryptoNoteProtocol/CryptoNoteProtocolHandler.h"
+#include "CryptoNoteCore/CryptoNoteFormatUtils.h"
+#include "Serialization/SerializationTools.h"
 #include "version.h"
+
+#include "Rpc/JsonRpc.h"
+#include "CryptoNoteCore/Currency.h"
+#include <boost/format.hpp>
+#include "Common/FormatTools.h"
 
 namespace {
 template <typename T>
@@ -53,7 +45,7 @@ std::string printTransactionFullInfo(const CryptoNote::CachedTransaction& transa
 
 }
 
-DaemonCommandsHandler::DaemonCommandsHandler(CryptoNote::Core& core, CryptoNote::NodeServer& srv, std::shared_ptr<Logging::LoggerManager> log, CryptoNote::RpcServer* prpc_server) :
+DaemonCommandsHandler::DaemonCommandsHandler(CryptoNote::Core& core, CryptoNote::NodeServer& srv, Logging::LoggerManager& log, CryptoNote::RpcServer* prpc_server) :
   m_core(core), m_srv(srv), logger(log, "daemon"), m_logManager(log), m_prpc_server(prpc_server) {
   m_consoleHandler.setHandler("exit", boost::bind(&DaemonCommandsHandler::exit, this, _1), "Shutdown the daemon");
   m_consoleHandler.setHandler("help", boost::bind(&DaemonCommandsHandler::help, this, _1), "Show this help");
@@ -83,13 +75,6 @@ std::string DaemonCommandsHandler::get_commands_str()
 
 //--------------------------------------------------------------------------------
 bool DaemonCommandsHandler::exit(const std::vector<std::string>& args) {
-  std::cout << InformationMsg("================= EXITING ==================\n"
-                              "== PLEASE WAIT, THIS MAY TAKE A LONG TIME ==\n"
-                              "============================================\n");
-
-  /* Set log to max when exiting. Sometimes this takes a while, and it helps
-     to let users know the daemon is still doing stuff */
-  m_logManager->setMaxLevel(Logging::TRACE);
   m_consoleHandler.requestStop();
   m_srv.sendStopSignal();
   return true;
@@ -199,7 +184,7 @@ bool DaemonCommandsHandler::set_log(const std::vector<std::string>& args)
     return true;
   }
 
-  m_logManager->setMaxLevel(static_cast<Logging::Level>(l));
+  m_logManager.setMaxLevel(static_cast<Logging::Level>(l));
   return true;
 }
 
@@ -320,7 +305,7 @@ bool DaemonCommandsHandler::status(const std::vector<std::string>& args)
     return false;
   } 
 
-  std::cout << Utilities::get_status_string(iresp) << std::endl;
+  std::cout << Common::get_status_string(iresp) << std::endl;
   
   return true;
 }
