@@ -155,8 +155,8 @@ const uint64_t DATABASE_WRITE_BUFFER_MB_DEFAULT_SIZE         = 256;
 const uint64_t DATABASE_READ_BUFFER_MB_DEFAULT_SIZE          = 10;
 const uint32_t DATABASE_DEFAULT_MAX_OPEN_FILES               = 100;
 const uint16_t DATABASE_DEFAULT_BACKGROUND_THREADS_COUNT     = 2;
-const char     LATEST_VERSION_URL[]                          = "https://btrcrypto.github.io/";
-const std::string LICENSE_URL                                = "https://github.com/btrcrypto/Bitcoinrich/blob/master/LICENSE";
+const char     LATEST_VERSION_URL[]                          = "https://github.com/nthon/bitcoinrich/releases";
+const std::string LICENSE_URL                                = "https://github.com/nthon/bitcoinrich/blob/master/LICENSE";
 const static   boost::uuids::uuid CRYPTONOTE_NETWORK         =
 {
     {  0x6b, 0x5c, 0xe4, 0x44, 0xfe, 0x83, 0x24, 0x41, 0x51, 0xf9, 0x92, 0xb3, 0xb5, 0xc4, 0xc4, 0xc8  }
